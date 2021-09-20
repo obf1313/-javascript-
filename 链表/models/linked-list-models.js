@@ -9,4 +9,10 @@ class Node {
 		this.next = undefined;
 	}
 }
-module.exports = { Node };
+class DoublyNode extends Node {
+	constructor(element, next, prev) {
+		super(element, next);
+		this.prev = prev; // 新增的
+	}
+}
+module.exports = { Node, DoublyNode };
