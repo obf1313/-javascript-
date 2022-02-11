@@ -43,7 +43,7 @@ class LinkedList {
 	// 从特定位置移除元素
 	removeAt(index) {
 		// 检查越界值
-		if (index > 0 && index < this.count) {
+		if (index < this.count) {
 			let current = this.head;
 			// 移除第一项
 			if (index === 0) {

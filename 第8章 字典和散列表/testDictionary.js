@@ -20,4 +20,4 @@ console.log(dictionary.values());
 console.log(dictionary.keyValues());
 dictionary.forEach((k, v) => {
 	console.log('forEach:', `key${k}`, `value${v}`)
-})
+});
