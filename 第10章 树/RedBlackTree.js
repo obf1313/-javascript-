@@ -70,7 +70,8 @@ class RedBlackTree extends BinarySearchTree {
 		tmp.left = node;
 		node.parent = tmp;
 	}
-	// 插入节点，我个人觉得这个并不能满足红黑树的要求，所以我看不下去了。
+	// 插入节点。
+	// 重新读了一下，叶子结点为黑指的是 NIL 节点为黑。
 	insertNode(node, key) {
 		if (this.compareFn(key, node.key) === Compare.LESS_THAN) {
 			if (node.left == null) {
