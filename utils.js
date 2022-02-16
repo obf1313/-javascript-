@@ -18,6 +18,10 @@ function defaultCompare(a, b) {
 	}
 	return a < b ? Compare.LESS_THAN : Compare.BIGGER_THAN;
 }
+// 反转判断
+function reverseCompare (compareFn) {
+	return (a, b) => compareFn(b, a);
+}
 // 转为字符串
 function defaultToString(item) {
 	if (item === null) {
@@ -39,4 +43,10 @@ function djb2HashCode(key) {
 	}
 	return hash % 1013;
 }
-module.exports = { defaultToString, djb2HashCode, defaultEquals, defaultCompare, Compare };
+// 交换函数
+function swap(array, a, b) {
+	const temp = array[a];
+	array[a] = array[b];
+	array[b] = temp;
+}
+module.exports = { defaultToString, djb2HashCode, defaultEquals, defaultCompare, Compare, swap, reverseCompare };
