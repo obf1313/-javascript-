@@ -5,6 +5,8 @@
  **/
 const Graph = require('./Graph');
 const { breadthFirstSearch, BFS, getPath, depthFirstSearch, DFS, topSort } = require('./search');
+const { dijkstra, floydWarshall } = require('./shortestPath');
+const { prim, kruskal } = require('./mst');
 
 const graph = new Graph;
 const myVertices = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
@@ -50,5 +52,34 @@ testGraph.addEdge('B', 'E');
 testGraph.addEdge('C', 'F');
 testGraph.addEdge('F', 'E');
 const result = DFS(testGraph);
-console.log('result', result);
-topSort(testVertices, result.finished);
+// console.log('result', result);
+// topSort(testVertices, result.finished);
+
+// 测试最短路径算法
+const shortGraph = [
+	[0, 2, 4, 0, 0, 0],
+	[0, 0, 2, 4, 2, 0],
+	[0, 0, 0, 0, 3, 0],
+	[0, 0, 0, 0, 0, 2],
+	[0, 0, 0, 3, 0, 2],
+	[0, 0, 0, 0, 0, 0]
+];
+// console.log('dijkstra', dijkstra(shortGraph, 0));
+// console.log('floydWarshall', floydWarshall(shortGraph));
+
+// 测试最小生成树
+const shortGraph1 = [
+	[0, 2, 4, 0, 0, 0],
+	[2, 0, 2, 4, 2, 0],
+	[4, 2, 0, 0, 3, 0],
+	[0, 4, 0, 0, 3, 2],
+	[0, 2, 3, 3, 0, 2],
+	[0, 0, 0, 2, 2, 0]
+];
+const { parent, key } = prim(shortGraph1);
+// for (let i = 1; i < parent.length; i++) {
+// 	console.log(`${parent[i]} - ${i}：${key[i]}`);
+// }
+// console.log('prim', prim(shortGraph1));
+const kruskalResult = kruskal(shortGraph1);
+console.log('kruskalResult', kruskalResult);
