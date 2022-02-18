@@ -82,4 +82,4 @@ const { parent, key } = prim(shortGraph1);
 // }
 // console.log('prim', prim(shortGraph1));
 const kruskalResult = kruskal(shortGraph1);
-console.log('kruskalResult', kruskalResult);
+// console.log('kruskalResult', kruskalResult);

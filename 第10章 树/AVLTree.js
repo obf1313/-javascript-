@@ -125,7 +125,7 @@ class AVLTree extends BinarySearchTree {
 			}
 			// 如果左子树向右不平衡，进行 LR
 			if (balanceFactorLeft === BalanceFactor.SLIGHTLY_UNBALANCED_RIGHT) {
-				return this.rotationLR(node.left);
+				return this.rotationLR(node);
 			}
 		}
 		// 如果右子树不平衡
@@ -138,7 +138,7 @@ class AVLTree extends BinarySearchTree {
 			}
 			// 如果右子树向左不平衡，进行 RL
 			if (balanceFactorRight === BalanceFactor.SLIGHTLY_UNBALANCED_LEFT) {
-				return this.rotationRL(node.right);
+				return this.rotationRL(node);
 			}
 		}
 		return node;

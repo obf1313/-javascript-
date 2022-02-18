@@ -21,7 +21,7 @@ const prim = graph => {
 	key[0] = 0;
 	parent[0] = -1;
 	for (let i = 0; i < length - 1; i++) {
-		// 从未处理的顶点中选出 key 值最小的顶点。
+		// 从未处理的顶点中选出 key 值最小的顶点的最后一个。
 		const u = minKey(key, visited);
 		visited[u] = true;
 		for (let v = 0; v < length; v++) {
@@ -65,7 +65,6 @@ const kruskal = graph => {
 	let v;
 	// 把邻接矩阵的值复制到 cost 数组，以方便修改且可以保留原始值行。
 	const cost = initializeCost(graph);
-	console.log('graph', graph);
 	// 当 MST 的边数小于顶点总数减 1 时。
 	while (ne < length - 1) {
 		// 找出权值最小的边
