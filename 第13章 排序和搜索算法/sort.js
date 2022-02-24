@@ -108,4 +108,194 @@ function merge(left, right, compareFn) {
 	// 将最后剩余的值合并
 	return result.concat(i < left.length ? left.slice(i) : right.slice(j));
 }
-module.exports = { bubbleSort, modifiedBubbleSort, selectionSort, insertionSort, mergeSort };
+/**
+ * 快速排序
+ * 双指针，中间值，递归
+**/
+function quickSort(array, compareFn = defaultCompare) {
+	return quick(array, 0, array.length - 1, compareFn);
+}
+// 实现递归
+function quick(array, left, right, compareFn) {
+	// 该变量能帮助我们将子数组分离为较小值数组和较大值数组。
+	let index;
+	if (array.length > 1) {
+		index = partition(array, left, right, compareFn);
+		if (left < index - 1) {
+			quick(array, left, index - 1, compareFn);
+		}
+		if (index > right) {
+			quick(array, index, right, compareFn);
+		}
+	}
+	return array;
+}
+// 实现排序
+function partition(array, left, right, compareFn) {
+	const pivot = array[Math.floor((right + left) / 2)];
+	let i = left;
+	let j = right;
+	while (i <= j) {
+		while (compareFn(array[i], pivot) === Compare.LESS_THAN) {
+			i++;
+		}
+		while (compareFn(array[j], pivot) === Compare.BIGGER_THAN) {
+			j--;
+		}
+		if (i <= j) {
+			swap(array, i, j);
+			i++;
+			j--;
+		}
+	}
+	return i;
+}
+/**
+ * 计数排序
+ * 计数排序使用一个用来存储每个元素在原始数组中出现次数的临时数组。
+ * 在所有元素计数完成后，临时数组已排好序并可迭代以构建排序后的结果数组。
+**/
+function countingSort(array) {
+	if (array.length < 2) {
+		return array;
+	}
+	const maxValue = findMaxValue(array);
+	const counts = new Array(maxValue + 1);
+	array.forEach(element => {
+		// 如果该数不存在，则设为 0
+		if (!counts[element]) {
+			counts[element] = 0;
+		}
+		counts[element]++;
+	});
+	let sortedIndex = 0;
+	counts.forEach((count, i) => {
+		while (count > 0) {
+			array[sortedIndex++] = i;
+			count--;
+		}
+	});
+	return array;
+}
+function findMaxValue(array) {
+	let max = array[0];
+	for (let i = 0; i < array.length; i++) {
+		if (array[i] > max) {
+			max = array[i];
+		}
+	}
+	return max;
+}
+/**
+ * 桶排序
+ * 将元素分为不同的桶（较小的数组），再使用一个简单的排序算法，例如插入排序，来对每个桶进行排序。
+ * 然后，再将所有的桶合并为结果数组。
+ * @param array 待排序数组
+ * @param bucketSize 指定桶数量，元素稀疏时，使用更多的桶更好，元素密集时，使用较少桶较好。
+**/
+function bucketSort(array, bucketSize = 5) {
+	if (array.length < 2) {
+		return array;
+	}
+	// 创建桶并将元素分布到不同的桶中
+	const buckets = createBuckets(array, bucketSize);
+	// 对每个桶执行插入排序算法和将所有桶合并为排序后的结果数组
+	return sortBuckets(buckets);
+}
+// 创建桶
+function createBuckets(array, bucketSize) {
+	let minValue = array[0];
+	let maxValue = array[0];
+	for (let i = 0; i < array.length; i++) {
+		if (array[i] < minValue) {
+			minValue = array[i];
+		} else if (array[i] > maxValue) {
+			maxValue = array[i];
+		}
+	}
+	// 计算每个桶内需要分布的元素个数 todo 这里感觉书上讲的很矛盾
+	const bucketCount = Math.floor((maxValue - minValue) / bucketSize) + 1;
+	const buckets = [];
+	for (let i = 0; i < bucketCount; i++) {
+		buckets[i] = [];
+	}
+	for (let i = 0; i < array.length; i++) {
+		const bucketIndex = Math.floor((array[i] - minValue) / bucketSize);
+		buckets[bucketIndex].push(array[i]);
+	}
+	return buckets;
+}
+// 排序
+function sortBuckets(buckets) {
+	const sortedArray = [];
+	for (let i = 0; i < buckets.length; i++) {
+		if (buckets[i] != null) {
+			insertionSort(buckets[i]);
+			sortedArray.push(...buckets[i]);
+		}
+	}
+	return sortedArray;
+}
+/**
+ * 基数排序
+ * 根据数字的有效位或基数将整数分布到桶中。
+ * 基数是基于数组中值的记数制的。
+**/
+function radixSort(array, radixBase = 10) {
+	if (array.length < 2) {
+		return array;
+	}
+	const { minValue, maxValue } = findMinMax(array);
+	let significantDigit = 1;
+	while ((maxValue - minValue) / significantDigit >= 1) {
+		array = countingSortForRadix(array, radixBase, significantDigit, minValue);
+		significantDigit = significantDigit * radixBase;
+	}
+	return array;
+}
+function countingSortForRadix(array, radixBase, significantDigit, minValue) {
+	let bucketsIndex;
+	// 元素为该桶有几项
+	const buckets = [];
+	const aux = [];
+	for (let i = 0; i < radixBase; i++) {
+		buckets[i] = 0;
+	}
+	// 计算每个桶有多少项
+	for (let i = 0; i < array.length; i++) {
+		bucketsIndex = Math.floor(((array[i] - minValue) / significantDigit) % radixBase);
+		buckets[bucketsIndex]++;
+	}
+	// 此时 buckets 中为累计值
+	for (let i = 1; i < radixBase; i++) {
+		buckets[i] += buckets[i - 1];
+	}
+	// 为什么要重后往前，从前往后不是一样的吗
+	for (let i = array.length - 1; i >= 0 ; i--) {
+		// 该值位于哪个桶，那么他前面有多少个数就能知道了
+		bucketsIndex = Math.floor(((array[i] - minValue) / significantDigit) % radixBase);
+		aux[--buckets[bucketsIndex]] = array[i];
+	}
+	return aux;
+}
+// 查找最大值，最小值
+function findMinMax(array) {
+	let minValue = undefined;
+	let maxValue = undefined;
+	if (array.length > 0) {
+		minValue = array[0];
+		maxValue = array[0];
+		for (let i = 0; i < array.length; i++) {
+			if (array[i] < minValue) {
+				minValue = array[i];
+			} else if (array[i] > maxValue) {
+				maxValue = array[i];
+			}
+		}
+	}
+	return { minValue, maxValue };
+}
+module.exports = {
+	bubbleSort, modifiedBubbleSort, selectionSort, insertionSort, mergeSort,
+	quickSort, countingSort, bucketSort, radixSort
+};
