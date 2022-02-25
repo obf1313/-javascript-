@@ -10,7 +10,8 @@ function defaultEquals(a, b) {
 // 比较判断
 const Compare = {
 	LESS_THAN: -1,
-	BIGGER_THAN: 1
+	BIGGER_THAN: 1,
+	EQUALS: 0
 };
 function defaultCompare(a, b) {
 	if (a === b) {
@@ -49,4 +50,21 @@ function swap(array, a, b) {
 	array[a] = array[b];
 	array[b] = temp;
 }
-module.exports = { defaultToString, djb2HashCode, defaultEquals, defaultCompare, Compare, swap, reverseCompare };
+// 小于等于
+function lesserOrEquals(a, b, compareFn) {
+	const comp = compareFn(a, b);
+	return comp === Compare.LESS_THAN || comp === Compare.EQUALS;
+}
+// 大于等于
+function biggerOrEquals(a, b, compareFn) {
+	const comp = compareFn(a, b);
+	return comp === Compare.BIGGER_THAN || comp === Compare.EQUALS;
+}
+function defaultDiff(a, b) {
+	return Number(a) - Number(b);
+}
+module.exports = {
+	defaultToString, djb2HashCode, defaultEquals, defaultCompare,
+	Compare, swap, reverseCompare, lesserOrEquals, biggerOrEquals,
+	defaultDiff
+};
