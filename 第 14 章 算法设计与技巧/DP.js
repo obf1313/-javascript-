@@ -1,5 +1,5 @@
 /**
- * @description: 算法设计与技巧
+ * @description: 算法设计与技巧（动态规划）
  * @author: cnn
  * @createTime: 2022/2/25 10:54
  **/
